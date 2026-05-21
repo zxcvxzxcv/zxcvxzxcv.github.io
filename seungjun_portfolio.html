@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>최승준 — Frontend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #5b8fff;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --grid: rgba(91,143,255,0.05);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .blob1 { width:500px; height:500px; background:#5b8fff; top:-150px; left:-150px; animation: drift 14s ease-in-out infinite alternate; }
+  .blob2 { width:400px; height:400px; background:#a78bfa; bottom:-100px; right:-100px; animation: drift 18s ease-in-out infinite alternate-reverse; }
+  .blob3 { width:300px; height:300px; background:#34d399; top:50%; left:50%; animation: drift 12s ease-in-out infinite alternate; }
+
+  @keyframes drift { from {transform:translate(0,0);} to {transform:translate(30px,40px);} }
+
+  /* NAV */
+  nav {
+    position: fixed; top:0; left:0; right:0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+  }
+  .nav-links { display:flex; gap:2rem; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 10vw;
+  }
+  .hero-inner { max-width: 900px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent3);
+    letter-spacing: 1px;
+    border: 1px solid rgba(52,211,153,0.3);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before { content:'●'; font-size:0.5rem; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    animation: fadeUp 0.8s 0.1s ease both;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title {
+    margin-top: 1.5rem;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 2px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-title span { color: var(--accent); font-weight: 500; }
+
+  .hero-desc {
+    margin-top: 2.5rem;
+    max-width: 520px;
+    line-height: 1.9;
+    color: #9090a8;
+    font-size: 0.95rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+  }
+  .btn-primary:hover { background: #7aaaff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(91,143,255,0.35); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 10vw;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    display: flex; align-items: center; gap: 0.8rem;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--muted);
+    animation: grow 2s ease-in-out infinite;
+  }
+  @keyframes grow { 0%,100%{width:20px;} 50%{width:50px;} }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(24px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* SECTION COMMON */
+  section {
+    position: relative; z-index: 1;
+    padding: 6rem 10vw;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 3px;
+    color: var(--text);
+    margin-bottom: 3rem;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+  }
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(91,143,255,0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(91,143,255,0.15); }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+  .skill-name { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; }
+  .skill-desc { font-size: 0.78rem; color: var(--muted); }
+
+  /* EDUCATION / EXPERIENCE */
+  .timeline { display: flex; flex-direction: column; gap: 1.5rem; }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 2rem;
+    padding: 1.8rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(var(--accent), var(--accent2));
+    border-radius: 3px 0 0 3px;
+  }
+  .timeline-item:hover { border-color: var(--border); transform: translateX(4px); }
+  .timeline-meta { }
+  .timeline-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent3);
+    letter-spacing: 1px;
+  }
+  .timeline-org { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+  .timeline-title { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; }
+  .timeline-body { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+  /* AWARDS */
+  .awards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .award-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .award-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,139,250,0.15), transparent);
+  }
+  .award-card:hover { border-color: var(--accent2); transform: translateY(-4px); }
+  .award-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+    background: rgba(167,139,250,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(167,139,250,0.3);
+  }
+  .award-title { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; line-height: 1.5; }
+  .award-org { font-size: 0.8rem; color: var(--muted); }
+
+  /* CERT */
+  .cert-item {
+    display: flex; align-items: center; gap: 1.2rem;
+    padding: 1.2rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+    transition: all 0.25s;
+  }
+  .cert-item:hover { border-color: var(--accent3); }
+  .cert-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent3);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent3);
+  }
+  .cert-name { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+  .cert-detail { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .contact-card {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.4rem 1.8rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.25s;
+  }
+  .contact-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(91,143,255,0.12); }
+  .contact-icon { font-size: 1.4rem; }
+  .contact-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .contact-value { font-size: 0.88rem; font-family: 'JetBrains Mono', monospace; margin-top: 0.2rem; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    padding: 2rem 10vw;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { font-size: 0.78rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 10vw;
+    position: relative; z-index: 1;
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 6vw; }
+    .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .hero { padding: 0 6vw; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SJ.DEV</div>
+  <div class="nav-links">
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="#awards">Awards</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">AVAILABLE FOR OPPORTUNITIES</div>
+    <h1 class="hero-name">CHOI<br>SEUNG<br>JUN</h1>
+    <p class="hero-title">미래의 <span>Frontend Developer</span></p>
+    <p class="hero-desc">
+      경남대학교 컴퓨터공학과에서 꿈을 키우고 있는 개발자 지망생입니다.<br>
+      리눅스와 시스템 이해를 기반으로, 사용자 경험을 설계하는 프론트엔드 개발자로 성장하고 있습니다.
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">📬 Contact Me</a>
+      <a href="https://github.com/zxcvxzxcv" target="_blank" class="btn btn-ghost">⚡ GitHub</a>
+    </div>
+  </div>
+  <div class="scroll-hint">SCROLL DOWN</div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">// 01 skills</div>
+  <h2 class="section-title">TECH STACK</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-icon">🐧</div>
+      <div class="skill-name">Linux</div>
+      <div class="skill-desc">리눅스 마스터 자격증 보유, 시스템 운영 및 CLI 환경에 능숙</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🌐</div>
+      <div class="skill-name">Frontend Dev</div>
+      <div class="skill-desc">HTML, CSS, JavaScript 기반 웹 개발 역량 성장 중</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">📊</div>
+      <div class="skill-name">Data & AI</div>
+      <div class="skill-desc">빅데이터 분석 및 AI 활용 아이디어 기획 경험 보유</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">💾</div>
+      <div class="skill-name">Semiconductor</div>
+      <div class="skill-desc">반도체 일머리사관학교 90시간 수료, 하드웨어 기초 이해</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">✈️</div>
+      <div class="skill-name">Aerospace IT</div>
+      <div class="skill-desc">경남항공고 졸업, IT와 항공 융합 분야 배경</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🤝</div>
+      <div class="skill-name">Problem Solving</div>
+      <div class="skill-desc">실생활 문제를 기술로 해결하는 아이디어 기획 역량</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">// 02 education</div>
+  <h2 class="section-title">EDUCATION</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-period">2024 — PRESENT</div>
+        <div class="timeline-org">경남대학교</div>
+      </div>
+      <div>
+        <div class="timeline-title">컴퓨터공학 2학년 재학 중</div>
+        <div class="timeline-body">소프트웨어 개발, 알고리즘, 시스템 프로그래밍 등을 학습하며 프론트엔드 개발자로의 성장을 목표로 하고 있습니다.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-meta">
+        <div class="timeline-period">~ 2023</div>
+        <div class="timeline-org">경남항공고등학교</div>
+      </div>
+      <div>
+        <div class="timeline-title">졸업</div>
+        <div class="timeline-body">항공 IT 관련 전공 교육을 이수하고 졸업. 다양한 기술 기반 지식을 쌓으며 공학적 사고방식을 습득했습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- AWARDS & CERTS -->
+<section id="awards">
+  <div class="section-label">// 03 awards & certifications</div>
+  <h2 class="section-title">ACHIEVEMENTS</h2>
+
+  <div style="margin-bottom:2rem">
+    <p style="font-size:0.8rem; letter-spacing:2px; color:var(--accent3); text-transform:uppercase; margin-bottom:1.2rem; font-family:'JetBrains Mono',monospace;">— Awards</p>
+    <div class="awards-grid">
+      <div class="award-card">
+        <div class="award-badge">🏆 최우수상</div>
+        <div class="award-title">빅데이터로 우리동네 문제해결<br>아이디어 공모대회</div>
+        <div class="award-org">최우수상 수상</div>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:0.8rem; letter-spacing:2px; color:var(--accent3); text-transform:uppercase; margin-bottom:1.2rem; font-family:'JetBrains Mono',monospace;">— Certifications & Courses</p>
+  <div class="cert-item">
+    <div class="cert-dot"></div>
+    <div>
+      <div class="cert-name">리눅스 마스터</div>
+      <div class="cert-detail">국가공인 자격증 보유</div>
+    </div>
+  </div>
+  <div class="cert-item">
+    <div class="cert-dot"></div>
+    <div>
+      <div class="cert-name">반도체 일머리사관학교</div>
+      <div class="cert-detail">90시간 수료</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">// 04 contact</div>
+  <h2 class="section-title">GET IN TOUCH</h2>
+  <div class="contact-grid">
+    <a href="mailto:sjchoi0318@gmail.com" class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">sjchoi0318@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://github.com/zxcvxzxcv" target="_blank" class="contact-card">
+      <div class="contact-icon">⚡</div>
+      <div>
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">github.com/zxcvxzxcv</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 CHOI SEUNG JUN — Frontend Developer in Progress</p>
+  <p>Built with passion & code</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.style.opacity = '1';
+        el.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.skill-card, .timeline-item, .award-card, .cert-item, .contact-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, box-shadow 0.25s';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
